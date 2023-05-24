@@ -7,7 +7,7 @@ import logging
 
 parser = argparse.ArgumentParser()
 parser.add_argument("input", type=pathlib.Path)
-parser.add_argument("--log-level", dest="log_level", choices=["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"], default="INFO")
+parser.add_argument("--log-level", dest="log_level", choices=["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"], default="WARNING")
 args = parser.parse_args()
 
 logging.basicConfig(level = args.log_level)

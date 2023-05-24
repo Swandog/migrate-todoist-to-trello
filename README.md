@@ -6,8 +6,10 @@ A simple project to take a ToDoist Project (Exported as a CSV Template) and impo
 Make sure you have `pipenv` installed. Then, run
 
 ```
-pipenv run src/main.py
+pipenv run src/main.py TEMPLATE_CSV_FILE
 ```
+
+You can add an option of `--log-level LEVEL` to set the logging level; allowed values are "DEBUG", "INFO", "WARNING", "ERROR", and "CRITICAL"
 
 # Methodology
 
