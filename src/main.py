@@ -4,6 +4,7 @@ import argparse
 import pathlib
 import csv
 import logging
+import re
 
 parser = argparse.ArgumentParser()
 parser.add_argument("input", type=pathlib.Path)
@@ -12,12 +13,28 @@ args = parser.parse_args()
 
 logging.basicConfig(level = args.log_level)
 
+label_replace=re.compile("@([a-zA-Z_]+)")
+
+labels = set()
+def ensure_label_exists(label: str):
+    logging.debug(f"\t\t\tEnsuring label {label} exists")
+
+    if label not in labels:
+        logging.info(f"\tCreating label {label}")
+        labels.add(label)
+
 def create_list(name: str) -> str:
     logging.info(f"Creating list ({name})")
     return name
 
-def create_card(list_identifier: str, title: str) -> str:
-    logging.info(f"\tCreating card in list ({list_identifier}) with title ({title})")
+def create_card(list_identifier: str, raw_title: str) -> str:
+    labels = []
+    title = label_replace.sub(lambda m: labels.append(m.group(1)), raw_title)
+
+    for label in labels:
+        ensure_label_exists(label)
+
+    logging.info(f"\tCreating card in list ({list_identifier}) with title ({title}) and labels ({labels})")
     return title
 
 def add_checklist_item_to_card(card_identifier: str, checklist_text: str):
