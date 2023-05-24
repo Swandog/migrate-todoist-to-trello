@@ -3,21 +3,25 @@
 import argparse
 import pathlib
 import csv
+import logging
 
 parser = argparse.ArgumentParser()
 parser.add_argument("input", type=pathlib.Path)
+parser.add_argument("--log-level", dest="log_level", choices=["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"], default="INFO")
 args = parser.parse_args()
 
+logging.basicConfig(level = args.log_level)
+
 def create_list(name: str) -> str:
-    print(f"Creating list ({name})")
+    logging.info(f"Creating list ({name})")
     return name
 
 def create_card(list_identifier: str, title: str) -> str:
-    print(f"\tCreating card in list ({list_identifier}) with title ({title})")
+    logging.info(f"\tCreating card in list ({list_identifier}) with title ({title})")
     return title
 
 def add_checklist_item_to_card(card_identifier: str, checklist_text: str):
-    print(f"\t\tAdding checklist item to card ({card_identifier}) with text ({checklist_text})")
+    logging.info(f"\t\tAdding checklist item to card ({card_identifier}) with text ({checklist_text})")
 
 current_list = None
 current_card = None
@@ -27,6 +31,8 @@ with open(args.input, newline='', encoding="utf-8-sig") as csvfile:
     for entry in csvreader:
         if not entry["TYPE"]:
             continue
+
+        logging.debug(entry)
 
         if entry["TYPE"] == "section":
             current_list = create_list(entry["CONTENT"])
@@ -43,4 +49,4 @@ with open(args.input, newline='', encoding="utf-8-sig") as csvfile:
                 raise ValueError(f"Undefined behavior for task {entry}")
 
         else:
-            print(f"Unknown record: {entry}")
+            logging.warn(f"Unknown record: {entry}")
